@@ -110,6 +110,9 @@ export const trpc = createTRPCNext<
         }),
         httpBatchLink({
           url: `${getBaseUrl()}/api/trpc`,
+          fetch(url, options) {
+            return fetch(url, options)
+          },
           /**
            * Set custom request headers on every request from tRPC
            * @link https://trpc.io/docs/ssr

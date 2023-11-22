@@ -15,6 +15,7 @@ import { TRPCError, initTRPC } from '@trpc/server'
 import { prisma } from './prisma'
 import { PinoLogger } from '~/lib/logger'
 import { type OpenApiMeta } from 'trpc-openapi'
+import tracer from 'dd-trace'
 
 const t = initTRPC
   .meta<OpenApiMeta>()
@@ -48,6 +49,11 @@ const loggerMiddleware = t.middleware(async ({ path, next, ctx, type }) => {
   const { req } = ctx
   const logger = PinoLogger.logger({ path, req })
 
+  // Set logger context in the middleware to tag the trace with the exact path
+  const span = tracer.scope().active()
+  if (span) {
+    span.setTag('resource.name', `${req?.method} /api/trpc/${path}`)
+  }
   const result = await next({
     ctx: { logger },
   })

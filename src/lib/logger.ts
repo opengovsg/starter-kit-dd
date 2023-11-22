@@ -1,6 +1,6 @@
 import 'pino-datadog-transport'
 import 'pino-pretty'
-import { pino, type TransportSingleOptions } from 'pino'
+import { pino } from 'pino'
 import { env } from '~/env.mjs'
 import { type NextApiRequest } from 'next'
 
@@ -54,21 +54,14 @@ export class PinoLogger {
       env.NEXT_PUBLIC_DD_ENV === 'development' ||
       env.NEXT_PUBLIC_DD_ENV === 'test'
     ) {
-      const pipeline = [
-        {
-          target: 'pino-pretty',
-          options: {
-            colorize: true,
-            hideObject: true,
-          },
-        },
-      ] as TransportSingleOptions[]
-      if (env.DATADOG_API_KEY) {
-        pipeline.push(datadogOptions)
-      }
-      transport = pino.transport({
-        pipeline,
-      })
+      // const consoleOptions = {
+      //   target: 'pino-pretty',
+      //   options: {
+      //     colorize: true,
+      //     hideObject: true,
+      //   },
+      // }
+      transport = pino.transport(datadogOptions)
     } else {
       transport = pino.transport(datadogOptions)
     }

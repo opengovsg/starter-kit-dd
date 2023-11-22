@@ -32,6 +32,7 @@
     ".eslintrc.cjs",
     "next-env.d.ts",
     "src/lib/iron-session.d.ts",
+    "./*.js",
     "**/*.ts",
     "**/*.tsx",
     "**/*.cjs",

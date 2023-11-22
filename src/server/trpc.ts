@@ -13,8 +13,7 @@ import { ZodError } from 'zod'
 import { type Context } from './context'
 import { TRPCError, initTRPC } from '@trpc/server'
 import { prisma } from './prisma'
-import { createBaseLogger } from '~/lib/logger'
-import getIP from '~/utils/getClientIp'
+import { PinoLogger } from '~/lib/logger'
 import { type OpenApiMeta } from 'trpc-openapi'
 
 const t = initTRPC
@@ -42,11 +41,12 @@ const t = initTRPC
     },
   })
 
-// Setting outer context with TPRC will not get us correct path during request batching, only by setting logger context in
+// Setting outer context with TRPC will not get us correct path during request batching, only by setting logger context in
 // the middleware do we get the exact path to log
-const loggerMiddleware = t.middleware(async ({ path, next, ctx }) => {
+const loggerMiddleware = t.middleware(async ({ path, next, ctx, type }) => {
   const start = Date.now()
-  const logger = createBaseLogger({ path, clientIp: getIP(ctx.req) })
+  const { req } = ctx
+  const logger = PinoLogger.logger({ path, req })
 
   const result = await next({
     ctx: { logger },
@@ -55,9 +55,17 @@ const loggerMiddleware = t.middleware(async ({ path, next, ctx }) => {
   const durationInMs = Date.now() - start
 
   if (result.ok) {
-    logger.info('success', { durationInMs })
+    logger.info({ durationInMs }, `[${type}]: ${path} - ${durationInMs}ms - OK`)
   } else {
-    logger.error('failure', { durationInMs, error: result.error })
+    logger.error(
+      {
+        durationInMs,
+        error_code: result.error.code,
+        error_message: result.error.message,
+        error_stack: result.error.stack,
+      },
+      `[${type}]: ${path} - ${durationInMs}ms - ${result.error.code} ${result.error.message}`
+    )
   }
 
   return result

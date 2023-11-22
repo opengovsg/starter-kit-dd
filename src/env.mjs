@@ -18,6 +18,9 @@ const client = z.object({
   NEXT_PUBLIC_ENABLE_STORAGE: coerceBoolean.default('false'),
   NEXT_PUBLIC_ENABLE_SGID: coerceBoolean.default('false'),
   NEXT_PUBLIC_APP_NAME: z.string().default('Starter Kit'),
+  NEXT_PUBLIC_DATADOG_APPLICATION_ID: z.string().optional(),
+  NEXT_PUBLIC_DATADOG_CLIENT_TOKEN: z.string().optional(),
+  NEXT_PUBLIC_DD_ENV: z.enum(['development', 'test', 'production', 'staging']),
 })
 
 /** Feature flags */
@@ -83,6 +86,7 @@ const server = z
       z.string().length(0),
     ]),
     SESSION_SECRET: z.string().min(32),
+    DATADOG_API_KEY: z.string().optional(),
   })
   // Add on schemas as needed that requires conditional validation.
   .merge(baseR2Schema)
@@ -136,6 +140,7 @@ const processEnv = {
   POSTMAN_API_KEY: process.env.POSTMAN_API_KEY,
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
   SENDGRID_FROM_ADDRESS: process.env.SENDGRID_FROM_ADDRESS,
+  DATADOG_API_KEY: process.env.DATADOG_API_KEY,
   SESSION_SECRET: process.env.SESSION_SECRET,
   R2_ACCESS_KEY_ID: process.env.R2_ACCESS_KEY_ID,
   R2_ACCOUNT_ID: process.env.R2_ACCOUNT_ID,
@@ -152,6 +157,11 @@ const processEnv = {
   NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
   NEXT_PUBLIC_ENABLE_STORAGE: process.env.NEXT_PUBLIC_ENABLE_STORAGE,
   NEXT_PUBLIC_ENABLE_SGID: process.env.NEXT_PUBLIC_ENABLE_SGID,
+  NEXT_PUBLIC_DATADOG_APPLICATION_ID:
+    process.env.NEXT_PUBLIC_DATADOG_APPLICATION_ID,
+  NEXT_PUBLIC_DATADOG_CLIENT_TOKEN:
+    process.env.NEXT_PUBLIC_DATADOG_CLIENT_TOKEN,
+  NEXT_PUBLIC_DD_ENV: process.env.NEXT_PUBLIC_DD_ENV,
 }
 
 // Don't touch the part below

@@ -47,17 +47,22 @@ export const emailSessionRouter = router({
             expires,
           },
         }),
-        sendMail({
-          subject: `Sign in to ${url.host}`,
-          body: `Your OTP is <b>${token}</b>. It will expire on ${formatInTimeZone(
-            expires,
-            'Asia/Singapore',
-            'dd MMM yyyy, hh:mmaaa'
-          )}.
+        sendMail(
+          {
+            subject: `Sign in to ${url.host}`,
+            body: `Your OTP is <b>${token}</b>. It will expire on ${formatInTimeZone(
+              expires,
+              'Asia/Singapore',
+              'dd MMM yyyy, hh:mmaaa'
+            )}.
       Please use this to login to your account.
       <p>If your OTP does not work, please request for a new one.</p>`,
-          recipient: email,
-        }),
+            recipient: email,
+          },
+          {
+            logger: ctx.logger,
+          }
+        ),
       ])
       return email
     }),

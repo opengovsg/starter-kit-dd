@@ -14,12 +14,18 @@ import { theme } from '~/theme'
 import { trpc } from '~/utils/trpc'
 import { FeatureProvider } from '~/components/AppProviders'
 import { LoginStateProvider } from '~/features/auth'
+import { useEffect } from 'react'
+import { realUserMonitoring } from '~/features/datadog'
 
 type AppPropsWithAuthAndLayout = AppProps & {
   Component: NextPageWithLayout
 }
 
 const MyApp = ((props: AppPropsWithAuthAndLayout) => {
+  useEffect(() => {
+    history.scrollRestoration = 'manual'
+    realUserMonitoring()
+  }, [])
   return (
     // Must wrap Jotai's provider in SSR context, see https://jotai.org/docs/guides/nextjs#provider.
     <Provider>

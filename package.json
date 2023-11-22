@@ -41,6 +41,7 @@
     "@aws-sdk/client-s3": "3.370.0",
     "@aws-sdk/s3-request-presigner": "3.370.0",
     "@chakra-ui/react": "^2.7.1",
+    "@datadog/browser-rum": "^5.4.0",
     "@hookform/resolvers": "^3.1.1",
     "@opengovsg/design-system-react": "^1.4.0",
     "@opengovsg/sgid-client": "^2.0.0",

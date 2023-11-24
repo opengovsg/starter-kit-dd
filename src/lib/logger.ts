@@ -54,14 +54,14 @@ export class PinoLogger {
       env.NEXT_PUBLIC_DD_ENV === 'development' ||
       env.NEXT_PUBLIC_DD_ENV === 'test'
     ) {
-      // const consoleOptions = {
-      //   target: 'pino-pretty',
-      //   options: {
-      //     colorize: true,
-      //     hideObject: true,
-      //   },
-      // }
-      transport = pino.transport(datadogOptions)
+      const consoleOptions = {
+        target: 'pino-pretty',
+        options: {
+          colorize: true,
+          hideObject: true,
+        },
+      }
+      transport = pino.transport(consoleOptions)
     } else {
       transport = pino.transport(datadogOptions)
     }
